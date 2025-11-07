@@ -63,15 +63,15 @@ for ch,en in zip(clistch,clisten):
 
 @app.get("/hotel/{hotel_id}")
 def hotel(request: Request, hotel_id: int):
-    if hotel_id>len(hotellist):
-        msg = "查詢不到相關資料"
-        return templates.TemplateResponse("hotel.html", {"request": request, "msg": msg})
-    else:
+    if hotel_id in hotellist:
         msg = hotellist[hotel_id]
         return templates.TemplateResponse("hotel.html", {"request": request, "msg": msg})
-
+    else:
+        msg = "查詢不到相關資料"
+        return templates.TemplateResponse("hotel.html", {"request": request, "msg": msg})
 
 
 # 靜態檔案處理放在最下方
 app.mount("/static", StaticFiles(directory="static"), name="static")  # 中取對應資料夾內的CSS
 app.mount("/", StaticFiles(directory="templates", html=True))  # html=True會自動讀取名稱為index的html為首頁
+
