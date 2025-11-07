@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>首頁</title>
+        <link rel="stylesheet" type="text/css" href="/static/style.css" />
+    </head>
+    <body>
+        <div class="title">    
+            <div class="titleword">歡迎光臨，請輸入信箱密碼</div>
+        </div>
+        <form class="system" action="/login" method="post" >
+            <div class="systemtitle">登入系統</div>
+            <label>信箱
+                <input type="text" name="email"/>
+            </label>
+            <label>密碼
+                <input type="text" name="password"/>
+            </label>
+            <label>同意條款
+                <input type="checkbox" id="agree"/>
+            </label>
+            <button class="button" id="checkin" type="submit">登入</button>
+        </form>
+        <form class="system" action="/hotel">
+            <div class="systemtitle">取得旅館資訊</div>
+            <label>編號
+                <input type="text" name="hotel" id="hotelnumber"/>
+            </label>
+            <button class="button" id="search">取得</button>
+        </form>
+        <script>
+            const checkin = document.querySelector("#checkin");
+            const agree = document.querySelector("#agree");
+            checkin.addEventListener("click", function(event){
+                if (!agree.checked){
+                    event.preventDefault(); // 如果事件可以被取消就取消事件，防止from表單自動送出資料
+                    return alert('請勾選同意條款')
+                }
+            }
+            )   
+            const hotelnumber = document.querySelector("#hotelnumber");
+            const search = document.querySelector("#search");
+            search.addEventListener("click", function(event){
+                event.preventDefault();
+                let number=Number(hotelnumber.value)
+                if (!Number.isInteger(number) || number <= 0 || hotelnumber.value===""){  // 取正整數
+                    return alert('請輸入正整數')
+                }
+                window.location.href = "/hotel/"+number;
+            }
+            ) 
+        </script>
+    </body>
+</html>
