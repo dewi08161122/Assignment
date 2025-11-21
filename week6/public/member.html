@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>登入成功</title>
+        <link rel="stylesheet" type="text/css" href="/static/style.css" />
+    </head>
+    <body>
+        <div class="title">    
+            <div class="titleword">歡迎光臨，這是會員頁</div>
+        </div>
+        <div class="system">
+            <label>{{name}}，歡迎登入系統</label>
+            <a href="/logout">登出系統</a>
+        </div>
+        <div class="system">
+            <div class="systemtitle">快來留言吧</div>
+            <label>內容
+                <input type="text" id="message"/>
+            </label>
+            <button class="button" onclick="postMessage()">送出</button>
+        </div>
+        <div class="system">
+            <div>
+                {% for message in messages %}
+                    <div>
+                        {{message.author}} : {{message.content}}
+                        {% if message.author == name %}
+                            <button onclick="deleteMessage('{{ message.id }}')">X</button>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <script>
+            async function checkStatus() {
+                let response=await fetch("/cheak",{
+                    method:"GET"
+                });
+                let result=await response.json();
+                if(result.ok){
+                    return;
+                }else{
+                    window.location="/";
+                }
+            }
+            checkStatus();
+
+            async function postMessage(){
+                let content=document.querySelector("#message").value
+                let response=await fetch("/createMessage",{
+                    method:"POST",
+                    body:JSON.stringify({"content":content})
+                })
+                let result=await response.json();
+                if(result.ok){
+                    window.location="/member"
+                }
+            }
+
+            async function deleteMessage(id){
+                if(confirm("你確定要刪除這則留言嗎？")){
+                    let response=await fetch("/deleteMessage",{
+                        method:"POST",
+                        body:JSON.stringify({"id":id})
+                    })
+                    let result=await response.json();
+                    if(result.ok){
+                        window.location="/member"
+                    }                
+                }else{
+                    return
+                }
+            }
+        </script>
+    </body>
+</html>
